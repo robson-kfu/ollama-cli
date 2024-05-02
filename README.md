@@ -7,8 +7,6 @@ Whether you're building applications that depend on Ollama or scripting automate
 ## Features
 
 - **Simple API**: Offers a straightforward and easy-to-use API for all Ollama operations.
-- **Lightweight**: Minimal dependencies to keep the library lightweight and easy to integrate.
-- **Extensible**: Designed with extensibility in mind, allowing for easy expansion to include more features of the Ollama system as needed.
 
 ## Getting Started
 
@@ -32,14 +30,8 @@ To start using `ollama-cli`, add the following dependency to your project.clj fi
 Here is a basic example of how to use `ollama-cli` in your Clojure application:
 
 ```clojure
-(ns my-app.core
-  (:require [ollama-cli.core :as ollama]))
-
-(defn perform-action []
-  (ollama/use-ollama "parameter"))
+(tbd)
 ```
-
-Replace `"parameter"` with actual parameters or configuration needed for your specific interaction with Ollama.
 
 ## Documentation
 
