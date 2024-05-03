@@ -1,6 +1,6 @@
-# ollama-cli
+# ollama/cli
 
-`ollama-cli` is a Clojure library designed to simplify and abstract the interaction with the Ollama system. This library provides a high-level API to facilitate easy access to Ollama's functionalities, hiding the complexities involved in the direct use of the Ollama system. 
+`ollama/cli` is a Clojure library designed to simplify and abstract the interaction with the Ollama system. This library provides a high-level API to facilitate easy access to Ollama's functionalities, hiding the complexities involved in the direct use of the Ollama system. 
 
 Whether you're building applications that depend on Ollama or scripting automated tasks, `ollama-cli` offers a convenient Clojure interface that enhances productivity and reduces boilerplate code.
 
@@ -12,25 +12,33 @@ Whether you're building applications that depend on Ollama or scripting automate
 
 ### Prerequisites
 
-Before you can use `ollama-cli`, ensure you have Clojure and Leiningen installed on your machine:
+Before you can use `ollama/cli`, ensure you have Clojure and Leiningen installed on your machine:
 
 - [Clojure](https://clojure.org/guides/getting_started)
 - [Leiningen](https://leiningen.org/)
 
 ### Installation
 
-To start using `ollama-cli`, add the following dependency to your project.clj file:
+To start using `ollama/cli`, add the following dependency to your project.clj file:
 
 ```clojure
-[ollama-cli "0.1.0"]
+[ollama/cli "0.1.0"]
 ```
 
 ### Usage
 
-Here is a basic example of how to use `ollama-cli` in your Clojure application:
+Here is a basic example of how to use `ollama/cli` in your Clojure application:
 
 ```clojure
-(tbd)
+'(:require [ollama.cli.chat :as chat])
+
+(def messages
+  [{:role "user"
+    :content "Why is the sky blue?"}])
+(def model "phi3")
+(def response (chat/chat! model messages))
+(doseq [chunk response]
+  (print (str chunk)))
 ```
 
 ## Documentation
