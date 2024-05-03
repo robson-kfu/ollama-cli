@@ -4,4 +4,6 @@
     :dependencies [[org.clojure/clojure "1.10.0"]
                    [clj-http "3.13.0"]
                    [cheshire "5.10.0"]
-                   [aero "1.1.6"]])
+                   [aero "1.1.6"]
+                   [org.clojure/tools.logging "1.3.0"]
+                   [ch.qos.logback/logback-classic "1.5.6"]])
