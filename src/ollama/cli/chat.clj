@@ -65,9 +65,10 @@
                   :content "Just experimenting, respond with an \"Hello, World\"!"}])
   (def opts {})
   (def is-stream true)
-  (def response (chat! {:model model :messages messages :is-stream}))
+  (def response (chat! {:model model :messages messages }))
   (class response)
+
   (doseq [s response]
-    (print (str s)))
+    (apply str s))
 
   (prn))
