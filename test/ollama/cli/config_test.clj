@@ -9,7 +9,7 @@
 
 (deftest test-override-config
   (testing "New config should override default config"
-           (config/set-config!
+           (config/config!
              {:host "http://new-host.com"
               :port "8080"})
            (is (= "http://new-host.com:8080" (config/url)))))

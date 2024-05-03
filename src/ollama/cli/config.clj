@@ -6,13 +6,13 @@
 
 (defonce config (atom initial-config))
 
-(defn set-config! [new-config]
+(defn config! [new-config]
   (reset! config new-config))
 
 (defn reset-config! []
   (reset! config (read-config (io/resource "config.edn"))))
 
-(defn get-config []
+(defn all-config []
   @config)
 
 (defn host [] (:host @config))
