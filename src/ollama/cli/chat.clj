@@ -4,7 +4,8 @@
             [clj-http.client :as client]
             [cheshire.core :as json]
             [ollama.cli.config :as config]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            [clojure.spec.alpha :as spec]))
 
 (defn- content [json]
   (get-in json ["message" "content"]))
@@ -32,7 +33,7 @@
     (parse-stream body)
     (parse-content body)))
 
-(defn- payload [model messages opts is-stream]
+(defn- payload [{:keys [model messages opts] :or {opts {}}} is-stream]
   (json/generate-string
    (assoc opts
           :model    model
@@ -42,27 +43,21 @@
 (def headers
   {:content-type "application/json"})
 
-(defn- chat-request [body is-stream]
-  (->> {:body body :headers headers}
-       (core/stream-payload is-stream)
-       (client/post (str (config/url) "/api/chat"))
-       (parse-response is-stream)))
+(defn- internal-request [{:keys [is-stream] :as request :or {is-stream true}}]
+  (->>
+   {:body    (payload request is-stream)
+    :headers headers}
+   (core/stream-payload is-stream)
+   (client/post (str (config/url) "/api/chat"))
+   (parse-response is-stream)))
 
-(defn send
+(defn chat!
   "Chat with the ollama API. Receive the model, messages, is-stream, and opts.
-  When is-tream iquals true, returns a lazySeq of string.
+   When is-tream iquals true, returns a lazySeq of string.
    Check possibilities for models and opts at https://ollama.com/library"
-  ([model messages]
-   (send model messages true {}))
-  ([model messages is-stream]
-   (send model messages is-stream {}))
-  ([model messages is-stream opts]
-   (if (not (seq model))
-     (throw (IllegalArgumentException. "Model can't be null"))
-     (chat-request
-      (payload model messages opts is-stream)
-      is-stream))))
-
+  [request]
+  {:pre [spec/valid? :chat/request request]}
+  (internal-request request))
 
 (comment
   (def model "phi3")
@@ -70,7 +65,7 @@
                   :content "Just experimenting, respond with an \"Hello, World\"!"}])
   (def opts {})
   (def is-stream true)
-  (def response (send model messages true))
+  (def response (chat! {:model model :messages messages :is-stream}))
   (class response)
   (doseq [s response]
     (print (str s)))
