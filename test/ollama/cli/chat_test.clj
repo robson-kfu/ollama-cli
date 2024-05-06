@@ -37,3 +37,13 @@
    (testing "Chatting with stream option"
             (let [response (chat! {:model model :messages messages})]
               (is (= "Hello, World!" (apply str (map str response))))))))
+
+(deftest test-valid-chat
+  (http-fake/with-fake-routes-in-isolation
+   {(str (config/url) "/api/chat") (fn [request]
+                                     {:status  200
+                                      :headers {"Content-Type" "application/json"}
+                                      :body   mock-stream-body})}
+   (testing "Chatting without stream option"
+            (let [response (chat! {:model model :messages messages :is-stram false})]
+              (is (= "Hello, World!" (apply str (map str response))))))))
