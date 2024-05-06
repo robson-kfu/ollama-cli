@@ -27,14 +27,16 @@
 (def model "phi3")
 (def messages [{:role    "user",
                 :content "Just experimenting, respond with an \"Hello, World\"!"}])
+(def invalid-messages [{:role    "unknow",
+                        :content 123}])
 
 (deftest test-valid-stream-chat
   (http-fake/with-fake-routes-in-isolation
    {(str (config/url) "/api/chat") (fn [request]
                                      {:status  200
                                       :headers {"Content-Type" "application/json"}
-                                      :body   mock-stream-body})}
-   (testing "Chatting with stream option"
+                                      :body    mock-stream-body})}
+   (testing "Valid chatting with stream option"
             (let [response (chat! {:model model :messages messages})]
               (is (= "Hello, World!" (apply str (map str response))))))))
 
@@ -43,7 +45,11 @@
    {(str (config/url) "/api/chat") (fn [request]
                                      {:status  200
                                       :headers {"Content-Type" "application/json"}
-                                      :body   mock-stream-body})}
-   (testing "Chatting without stream option"
+                                      :body    mock-stream-body})}
+   (testing "Valid chatting without stream option"
             (let [response (chat! {:model model :messages messages :is-stram false})]
-              (is (= "Hello, World!" (apply str (map str response))))))))
+              (is (= "Hello, World!" (apply str (map str response))))))
+   (testing "Invalid chatting without stream option"
+            (is
+              (thrown? java.lang.AssertionError
+                       (chat! {:model model :messages invalid-messages :is-stram false}))))))

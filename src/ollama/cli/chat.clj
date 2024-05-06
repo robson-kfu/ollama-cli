@@ -1,10 +1,11 @@
 (ns ollama.cli.chat
   (:require [ollama.cli.core :as core]
+            [ollama.cli.config :as config]
+            [ollama.cli.schemas :as os]
             [clojure.java.io :as io]
             [clj-http.client :as client]
             [cheshire.core :as json]
-            [ollama.cli.config :as config]
-            [clojure.spec.alpha :as spec]))
+            [clojure.spec.alpha :as s]))
 
 (defn- extract-message-content [json-str]
   (try
@@ -44,7 +45,8 @@
    When is-tream iquals true, returns a lazySeq of string.
    Check possibilities for models and opts at https://ollama.com/library"
   [{:keys [is-stream] :as request :or {is-stream true}}]
-  {:pre [spec/valid? :chat/request request]}
+  {:pre  [(s/valid? ::os/request request)]
+   :post [(s/valid? ::os/response %)]}
   (->>
    {:body    (->payload request is-stream)
     :headers headers}
@@ -58,7 +60,7 @@
                   :content "Just experimenting, respond with an \"Hello, World\"!"}])
   (def opts {})
   (def is-stream true)
-  (def response (chat! {:model model :messages messages}))
+  (def response (chat! {:model model :messages messages }))
   (class response)
 
   (doseq [s response]
