@@ -4,7 +4,6 @@
             [clj-http.client :as client]
             [cheshire.core :as json]
             [ollama.cli.config :as config]
-            [clojure.tools.logging :as log]
             [clojure.spec.alpha :as spec]))
 
 (defn- extract-message-content [json-str]
@@ -13,7 +12,11 @@
         json/parse-string
         (get-in ["message" "content"]))
     (catch Exception e
-      (log/error "Failed to parse JSON:" json-str "with error:" (.getMessage e))
+      (ex-info
+       "Failed to parse JSON in chat response."
+       {:response     json-str
+        :errorMessage (.getMessage e)}
+       e)
       nil)))
 
 (defn- parse-stream [stream]
@@ -55,7 +58,7 @@
                   :content "Just experimenting, respond with an \"Hello, World\"!"}])
   (def opts {})
   (def is-stream true)
-  (def response (chat! {:model model :messages messages }))
+  (def response (chat! {:model model :messages messages}))
   (class response)
 
   (doseq [s response]
