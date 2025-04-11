@@ -42,7 +42,7 @@
 
 (defn chat!
   "Chat with the ollama API. Receive the model, messages, is-stream, and opts.
-   When is-tream iquals true, returns a lazySeq of string.
+   When is-stream equals true, returns a lazySeq of string.
    Check possibilities for models and opts at https://ollama.com/library"
   [{:keys [is-stream] :as request :or {is-stream true}}]
   {:pre  [(s/valid? ::os/request request)]
@@ -60,7 +60,7 @@
                   :content "Just experimenting, respond with an \"Hello, World\"!"}])
   (def opts {})
   (def is-stream true)
-  (def response (chat! {:model model :messages messages }))
+  (def response (chat! {:model model :messages messages}))
   (class response)
 
   (doseq [s response]

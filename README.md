@@ -18,12 +18,8 @@ Before you can use `ollama/cli`, ensure you have Clojure and Leiningen installed
 - [Leiningen](https://leiningen.org/)
 
 ### Installation
+Under progress to publish.
 
-To start using `ollama/cli`, add the following dependency to your project.clj file:
-
-```clojure
-[ollama/cli "0.1.0"]
-```
 
 ### Usage
 
