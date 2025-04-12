@@ -1,3 +1,5 @@
+[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.robson-kfu/ollama-cli.svg?include_prereleases)](https://clojars.org/org.clojars.robson-kfu/ollama-cli)
+
 # ollama/cli
 
 `ollama/cli` is a Clojure library designed to simplify and abstract the interaction with the Ollama system. This library provides a high-level API to facilitate easy access to Ollama's functionalities, hiding the complexities involved in the direct use of the Ollama system. 
@@ -16,10 +18,6 @@ Before you can use `ollama/cli`, ensure you have Clojure and Leiningen installed
 
 - [Clojure](https://clojure.org/guides/getting_started)
 - [Leiningen](https://leiningen.org/)
-
-### Installation
-Under progress to publish.
-
 
 ### Usage
 
