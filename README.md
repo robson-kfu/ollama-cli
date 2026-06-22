@@ -33,6 +33,7 @@ Here are basic examples of how to use `ollama/cli` in your Clojure application:
 ```clojure
 (ns my-app
   (:require [ollama.cli.chat :as chat]
+            [ollama.cli.embed :as embed]
             [ollama.cli.generate :as generate]))
 
 (def messages
@@ -53,6 +54,13 @@ Here are basic examples of how to use `ollama/cli` in your Clojure application:
                        :think true}))
 
 (:response generated)
+
+(def embeddings
+  (embed/embed! {:model "embeddinggemma"
+                 :input ["Why is the sky blue?"
+                         "Why is the grass green?"]}))
+
+(:embeddings embeddings)
 ```
 
 ## Documentation

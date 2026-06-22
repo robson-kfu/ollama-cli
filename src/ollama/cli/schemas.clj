@@ -49,6 +49,13 @@
 (s/def ::options map?)
 (s/def ::logprobs boolean?)
 (s/def ::top_logprobs int?)
+(s/def ::truncate boolean?)
+(s/def ::dimensions int?)
+(s/def ::input (s/or :string string?
+                     :strings (s/coll-of string? :kind vector? :min-count 1)))
+(s/def ::embedding-value number?)
+(s/def ::embedding (s/coll-of ::embedding-value :kind vector?))
+(s/def ::embeddings (s/coll-of ::embedding :kind vector?))
 
 (s/def ::generate-request
        (s/keys :req-un [::model]
@@ -68,3 +75,18 @@
 (s/def ::generate-response
        (s/or :events (s/coll-of ::generate-event :kind seq?)
              :event ::generate-event))
+
+(s/def ::embed-request
+       (s/keys :req-un [::model ::input]
+               :opt-un [::truncate
+                        ::dimensions
+                        ::keep_alive
+                        ::options]))
+(s/def ::embed-response
+       (s/keys :req-un [::model ::embeddings]
+               :opt-un [::total_duration
+                        ::load_duration
+                        ::prompt_eval_count]))
+(s/def ::total_duration int?)
+(s/def ::load_duration int?)
+(s/def ::prompt_eval_count int?)
