@@ -1,18 +1,16 @@
 (ns ollama.cli.chat
-  (:require [ollama.cli.core :as core]
-            [ollama.cli.config :as config]
-            [ollama.cli.schemas :as os]
+  (:require [cheshire.core :as json]
+            [clj-http.client :as client]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [clj-http.client :as client]
-            [cheshire.core :as json]
-            [clojure.spec.alpha :as s]))
+            [clojure.spec.alpha :as s]
+            [ollama.cli.config :as config]
+            [ollama.cli.core :as core]
+            [ollama.cli.schemas :as os]))
 
-(defn- extract-message-content [json-str]
+(defn- extract-event [json-str]
   (try
-    (-> json-str
-        json/parse-string
-        (get-in ["message" "content"]))
+    (json/parse-string json-str true)
     (catch Exception e
       (ex-info
        "Failed to parse JSON in chat response."
@@ -24,39 +22,55 @@
 (defn- parse-stream [stream]
   (with-open [rdr (io/reader stream)]
     (doall
-     (map extract-message-content
+     (map extract-event
           (remove str/blank? (line-seq rdr))))))
 
 (defn- parse-response [is-stream {:keys [body]}]
   (if is-stream
     (parse-stream body)
-    (extract-message-content body)))
+    (extract-event body)))
 
-(defn- ->payload [{:keys [model messages opts] :or {opts {}}} is-stream]
+(defn- request-stream [{:keys [stream is-stream is-stram]}]
+  (cond
+    (some? stream) stream
+    (some? is-stream) is-stream
+    (some? is-stram) is-stram
+    :else true))
+
+(defn- ->payload [{:keys [model
+                          messages
+                          tools
+                          format
+                          think
+                          keep_alive
+                          logprobs
+                          top_logprobs
+                          options
+                          opts]}
+                  is-stream]
   (json/generate-string
-   (assoc opts
-          :model    model
-          :messages messages
-          :stream   is-stream)))
+   (cond-> {:model model
+            :messages messages
+            :stream is-stream}
+     (some? tools) (assoc :tools tools)
+     (some? format) (assoc :format format)
+     (some? think) (assoc :think think)
+     (some? keep_alive) (assoc :keep_alive keep_alive)
+     (some? logprobs) (assoc :logprobs logprobs)
+     (some? top_logprobs) (assoc :top_logprobs top_logprobs)
+     (some? (or options opts)) (assoc :options (or options opts)))))
 
 (def headers
   {:content-type "application/json"})
 
-(defn- stream? [{:keys [is-stream is-stram]}]
-  (if (some? is-stream)
-    is-stream
-    (if (some? is-stram)
-      is-stram
-      true)))
-
 (defn chat!
-  "Chat with the ollama API. Receive the model, messages, is-stream, and opts.
-   When is-stream equals true, returns a lazySeq of string.
-   Check possibilities for models and opts at https://ollama.com/library"
+  "Generate a chat response with the Ollama API.
+   Returns a sequence of parsed stream events when streaming is enabled, or a
+   single parsed response map when streaming is disabled."
   [request]
   {:pre  [(s/valid? ::os/chat-request request)]
    :post [(s/valid? ::os/chat-response %)]}
-  (let [is-stream (stream? request)]
+  (let [is-stream (request-stream request)]
     (->>
      {:body    (->payload request is-stream)
       :headers headers}
