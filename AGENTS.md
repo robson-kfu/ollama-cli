@@ -1,16 +1,15 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-This repository is a small Clojure library built with Leiningen. Production code lives under `src/ollama/cli/` and is split by concern: `chat.clj` wraps the Ollama API, `config.clj` manages runtime configuration, `core.clj` contains shared helpers, and `schemas.clj` defines request/response specs. Tests mirror that structure under `test/ollama/cli/`. Default settings are stored in `resources/config.edn`, and longer-form notes belong in `doc/`.
+This repository is a small Clojure library built with `tools.deps`. Production code lives under `src/ollama/cli/` and is split by concern: `chat.clj` wraps the Ollama API, `config.clj` manages runtime configuration, `core.clj` contains shared helpers, and `schemas.clj` defines request/response specs. Tests mirror that structure under `test/ollama/cli/`, with a lightweight local test runner in `test/ollama/cli/test_runner.clj`. Default settings are stored in `resources/config.edn`, and longer-form notes belong in `doc/`.
 
 ## Build, Test, and Development Commands
-Use Leiningen for all local work:
+Use the Clojure CLI for local work:
 
-- `lein test` runs the full test suite in `test/`.
-- `lein test ollama.cli.chat-test` runs a single namespace while iterating.
-- `lein pprint` prints `project.clj` in a readable format when editing dependencies or metadata.
+- `clojure -M:test` runs the full test suite in `test/`.
+- `clojure -M:test` is the only built-in test command today; add a narrower runner option later if namespace-scoped execution becomes necessary.
 
-Install `lein` and a compatible JDK before contributing. There is no separate build pipeline in this repo today; tests are the main verification step.
+Install the Clojure CLI and a compatible JDK before contributing. There is no separate build pipeline in this repo today; tests are the main verification step.
 
 ## Coding Style & Naming Conventions
 Follow standard Clojure formatting: two-space indentation, aligned bindings where it improves readability, and one namespace per file. Keep namespaces consistent with paths, for example `src/ollama/cli/chat.clj` -> `ollama.cli.chat`. Prefer kebab-case for vars and functions (`reset-config!`, `stream-payload`) and reserve `!` for functions with side effects. Keep public APIs small and push parsing or transport details into private helpers.

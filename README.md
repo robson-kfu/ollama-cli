@@ -14,10 +14,17 @@ Whether you're building applications that depend on Ollama or scripting automate
 
 ### Prerequisites
 
-Before you can use `ollama/cli`, ensure you have Clojure and Leiningen installed on your machine:
+Before you can use `ollama/cli`, ensure you have the Clojure CLI installed on your machine:
 
-- [Clojure](https://clojure.org/guides/getting_started)
-- [Leiningen](https://leiningen.org/)
+- [Clojure CLI](https://clojure.org/guides/getting_started)
+
+### Development
+
+Run the full test suite with:
+
+```bash
+clojure -M:test
+```
 
 ### Usage
 

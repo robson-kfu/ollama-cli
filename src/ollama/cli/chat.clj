@@ -3,6 +3,7 @@
             [ollama.cli.config :as config]
             [ollama.cli.schemas :as os]
             [clojure.java.io :as io]
+            [clojure.string :as str]
             [clj-http.client :as client]
             [cheshire.core :as json]
             [clojure.spec.alpha :as s]))
@@ -23,7 +24,8 @@
 (defn- parse-stream [stream]
   (with-open [rdr (io/reader stream)]
     (doall
-     (map extract-message-content (line-seq rdr)))))
+     (map extract-message-content
+          (remove str/blank? (line-seq rdr))))))
 
 (defn- parse-response [is-stream {:keys [body]}]
   (if is-stream

@@ -64,7 +64,7 @@
 (deftest test-chat-payload-contains-stream-flag
   (http-fake/with-fake-routes-in-isolation
    {(str (config/url) "/api/chat") (fn [request]
-                                     (let [payload (json/parse-string (:body request) true)]
+                                     (let [payload (json/parse-string (slurp (:body request)) true)]
                                        (is (= false (:stream payload)))
                                        {:status  200
                                         :headers {"Content-Type" "application/json"}

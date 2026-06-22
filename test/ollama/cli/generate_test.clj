@@ -30,7 +30,7 @@
 (deftest test-valid-stream-generate
   (http-fake/with-fake-routes-in-isolation
    {(str (config/url) "/api/generate") (fn [request]
-                                         (let [payload (json/parse-string (:body request) true)]
+                                         (let [payload (json/parse-string (slurp (:body request)) true)]
                                            (is (= model (:model payload)))
                                            (is (= prompt (:prompt payload)))
                                            (is (= true (:stream payload)))
@@ -48,7 +48,7 @@
 (deftest test-valid-generate
   (http-fake/with-fake-routes-in-isolation
    {(str (config/url) "/api/generate") (fn [request]
-                                         (let [payload (json/parse-string (:body request) true)]
+                                         (let [payload (json/parse-string (slurp (:body request)) true)]
                                            (is (= false (:stream payload)))
                                            (is (= false (:logprobs payload)))
                                            {:status  200
