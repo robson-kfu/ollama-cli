@@ -41,7 +41,7 @@
                                       :headers {"Content-Type" "application/json"}
                                       :body    mock-stream-body})}
    (testing "Valid chatting with stream option"
-            (let [response (chat! {:model model :messages messages})]
+            (let [response (chat {:model model :messages messages})]
               (is (= "Hello, World!"
                      (apply str (map #(get-in % [:message :content]) response))))
               (is (= false (:done (first response))))
@@ -54,19 +54,19 @@
                                       :headers {"Content-Type" "application/json"}
                                       :body    mock-body})}
    (testing "Valid chatting without stream option"
-            (let [response (chat! {:model model :messages messages :stream false})]
+            (let [response (chat {:model model :messages messages :stream false})]
               (is (= "Hello, World!" (get-in response [:message :content])))
               (is (= true (:done response)))))
    (testing "Legacy is-stream key still disables streaming"
-            (let [response (chat! {:model model :messages messages :is-stream false})]
+            (let [response (chat {:model model :messages messages :is-stream false})]
               (is (= "Hello, World!" (get-in response [:message :content])))))
    (testing "Legacy typo key still disables streaming"
-            (let [response (chat! {:model model :messages messages :is-stram false})]
+            (let [response (chat {:model model :messages messages :is-stram false})]
               (is (= "Hello, World!" (get-in response [:message :content])))))
    (testing "Invalid chatting without stream option"
             (is
               (thrown? java.lang.AssertionError
-                       (chat! {:model model :messages invalid-messages :is-stream false}))))))
+                       (chat {:model model :messages invalid-messages :is-stream false}))))))
 
 (deftest test-chat-payload-contains-documented-fields
   (http-fake/with-fake-routes-in-isolation
@@ -81,7 +81,7 @@
                                        {:status  200
                                         :headers {"Content-Type" "application/json"}
                                         :body    mock-body}))}
-   (chat! {:model model
+   (chat {:model model
            :messages messages
            :stream false
            :format "json"
@@ -98,7 +98,7 @@
                                        {:status  200
                                         :headers {"Content-Type" "application/json"}
                                         :body    mock-body}))}
-   (chat! {:model model
+   (chat {:model model
            :messages messages
            :stream false
            :opts {:temperature 0.2}})))

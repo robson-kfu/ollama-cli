@@ -63,7 +63,7 @@
 (def headers
   {:content-type "application/json"})
 
-(defn chat!
+(defn chat
   "Generate a chat response with the Ollama API.
    Returns a sequence of parsed stream events when streaming is enabled, or a
    single parsed response map when streaming is disabled."
@@ -84,7 +84,7 @@
                   :content "Just experimenting, respond with an \"Hello, World\"!"}])
   (def opts {})
   (def is-stream true)
-  (def response (chat! {:model model :messages messages}))
+  (def response (chat {:model model :messages messages}))
   (class response)
 
   (doseq [s response]

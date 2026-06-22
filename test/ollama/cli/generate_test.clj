@@ -39,7 +39,7 @@
                                             :headers {"Content-Type" "application/json"}
                                             :body    mock-stream-body}))}
    (testing "Valid generation with stream option"
-     (let [response (generate! {:model model
+     (let [response (generate {:model model
                                 :prompt prompt
                                 :think "medium"})]
        (is (= "Hello world!" (apply str (map :response response))))
@@ -55,7 +55,7 @@
                                             :headers {"Content-Type" "application/json"}
                                             :body    mock-body}))}
    (testing "Valid generation without stream option"
-     (let [response (generate! {:model model
+     (let [response (generate {:model model
                                 :prompt prompt
                                 :stream false
                                 :logprobs false})]
@@ -66,4 +66,4 @@
 (deftest test-invalid-generate
   (testing "Model is required"
            (is (thrown? java.lang.AssertionError
-                        (generate! {:prompt prompt :stream false})))))
+                        (generate {:prompt prompt :stream false})))))

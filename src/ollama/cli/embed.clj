@@ -25,7 +25,7 @@
      (some? keep_alive) (assoc :keep_alive keep_alive)
      (some? options) (assoc :options options))))
 
-(defn embed!
+(defn embed
   "Generate embeddings with the Ollama API.
    Returns a parsed response map with the model metadata and embedding vectors."
   [request]

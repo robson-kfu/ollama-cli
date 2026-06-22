@@ -37,7 +37,7 @@
                                         {:status  200
                                          :headers {"Content-Type" "application/json"}
                                          :body    mock-body}))}
-   (let [response (embed! {:model model
+   (let [response (embed {:model model
                            :input input
                            :truncate false
                            :dimensions 128
@@ -55,18 +55,18 @@
                                         {:status  200
                                          :headers {"Content-Type" "application/json"}
                                          :body    mock-body}))}
-   (let [response (embed! {:model model
+   (let [response (embed {:model model
                            :input multi-input})]
      (is (= model (:model response))))))
 
 (deftest test-invalid-embed
   (testing "Model and input are required"
     (is (thrown? java.lang.AssertionError
-                 (embed! {:model model}))))
+                 (embed {:model model}))))
   (testing "Input must be a string or a non-empty vector of strings"
     (is (thrown? java.lang.AssertionError
-                 (embed! {:model model
+                 (embed {:model model
                           :input []})))
     (is (thrown? java.lang.AssertionError
-                 (embed! {:model model
+                 (embed {:model model
                           :input ["ok" 1]})))))

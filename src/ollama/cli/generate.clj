@@ -61,7 +61,7 @@
 (def headers
   {:content-type "application/json"})
 
-(defn generate!
+(defn generate
   "Generate text with the Ollama API.
    Returns a sequence of parsed stream events when :stream is true, or a single
    parsed response map when :stream is false."
@@ -77,7 +77,7 @@
 
 (comment
   (def response
-    (generate! {:model  "phi3"
+    (generate {:model  "phi3"
                 :prompt "Why is the sky blue?"
                 :think  true}))
 
