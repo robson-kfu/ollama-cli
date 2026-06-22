@@ -21,18 +21,31 @@ Before you can use `ollama/cli`, ensure you have Clojure and Leiningen installed
 
 ### Usage
 
-Here is a basic example of how to use `ollama/cli` in your Clojure application:
+Here are basic examples of how to use `ollama/cli` in your Clojure application:
 
 ```clojure
-'(:require [ollama.cli.chat :as chat])
+(ns my-app
+  (:require [ollama.cli.chat :as chat]
+            [ollama.cli.generate :as generate]))
 
 (def messages
   [{:role "user"
     :content "Why is the sky blue?"}])
 (def model "phi3")
-(def response (chat/chat! model messages))
+
+(def response
+  (chat/chat! {:model model :messages messages}))
+
 (doseq [chunk response]
   (print (str chunk)))
+
+(def generated
+  (generate/generate! {:model model
+                       :prompt "Summarize Rayleigh scattering"
+                       :stream false
+                       :think true}))
+
+(:response generated)
 ```
 
 ## Documentation

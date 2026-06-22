@@ -40,19 +40,27 @@
 (def headers
   {:content-type "application/json"})
 
+(defn- stream? [{:keys [is-stream is-stram]}]
+  (if (some? is-stream)
+    is-stream
+    (if (some? is-stram)
+      is-stram
+      true)))
+
 (defn chat!
   "Chat with the ollama API. Receive the model, messages, is-stream, and opts.
    When is-stream equals true, returns a lazySeq of string.
    Check possibilities for models and opts at https://ollama.com/library"
-  [{:keys [is-stream] :as request :or {is-stream true}}]
-  {:pre  [(s/valid? ::os/request request)]
-   :post [(s/valid? ::os/response %)]}
-  (->>
-   {:body    (->payload request is-stream)
-    :headers headers}
-   (core/stream-payload is-stream)
-   (client/post (str (config/url) "/api/chat"))
-   (parse-response is-stream)))
+  [request]
+  {:pre  [(s/valid? ::os/chat-request request)]
+   :post [(s/valid? ::os/chat-response %)]}
+  (let [is-stream (stream? request)]
+    (->>
+     {:body    (->payload request is-stream)
+      :headers headers}
+     (core/stream-payload is-stream)
+     (client/post (str (config/url) "/api/chat"))
+     (parse-response is-stream))))
 
 (comment
   (def model "phi3")
