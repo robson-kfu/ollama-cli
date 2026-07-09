@@ -19,8 +19,7 @@
     (str "v" version)))
 
 (def pom-template
-  [[:name "ollama-cli"]
-   [:description "A small Clojure client for Ollama chat, generate, and embedding APIs."]
+  [[:description "A small Clojure client for Ollama chat, generate, and embedding APIs."]
    [:url "https://github.com/robson-kfu/ollama-cli"]
    [:developers
     [:developer
