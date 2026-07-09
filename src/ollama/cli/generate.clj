@@ -1,4 +1,5 @@
 (ns ollama.cli.generate
+  "High-level client for Ollama's `/api/generate` endpoint."
   (:require [cheshire.core :as json]
             [clj-http.client :as client]
             [clojure.java.io :as io]
@@ -62,9 +63,14 @@
   {:content-type "application/json"})
 
 (defn generate
-  "Generate text with the Ollama API.
-   Returns a sequence of parsed stream events when :stream is true, or a single
-   parsed response map when :stream is false."
+  "Send a text generation request to Ollama.
+
+  `request` accepts the keys defined by `ollama.cli.schemas/generate-request`,
+  such as `:model`, `:prompt`, optional `:system`, and optional generation
+  parameters.
+
+  Returns a sequence of parsed stream events when `:stream` is true, or a
+  single parsed response map when `:stream` is false."
   [{:keys [stream] :as request :or {stream true}}]
   {:pre  [(s/valid? ::os/generate-request request)]
    :post [(s/valid? ::os/generate-response %)]}

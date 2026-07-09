@@ -1,14 +1,18 @@
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.robson-kfu/ollama-cli.svg?include_prereleases)](https://clojars.org/org.clojars.robson-kfu/ollama-cli)
+[![cljdoc badge](https://cljdoc.org/badge/org.clojars.robson-kfu/ollama-cli)](https://cljdoc.org/d/org.clojars.robson-kfu/ollama-cli)
 
 # ollama/cli
 
-`ollama/cli` is a Clojure library designed to simplify and abstract the interaction with the Ollama system. This library provides a high-level API to facilitate easy access to Ollama's functionalities, hiding the complexities involved in the direct use of the Ollama system. 
-
-Whether you're building applications that depend on Ollama or scripting automated tasks, `ollama-cli` offers a convenient Clojure interface that enhances productivity and reduces boilerplate code.
+`ollama/cli` is a small Clojure client for Ollama's HTTP API. It provides
+focused functions for chat, text generation, and embeddings while keeping the
+request payloads close to Ollama's native API.
 
 ## Features
 
-- **Simple API**: Offers a straightforward and easy-to-use API for all Ollama operations.
+- Chat completions via `ollama.cli.chat/chat`
+- Text generation via `ollama.cli.generate/generate`
+- Embeddings via `ollama.cli.embed/embed`
+- Runtime endpoint configuration via `ollama.cli.config`
 
 ## Getting Started
 
@@ -41,20 +45,18 @@ clojure -T:build install
 Publish the snapshot to Clojars with a deploy token:
 
 ```bash
-set -a
-source .env
-set +a
-clojure -X:deploy
+clojure -T:build jar
+./bin/publish-clojars
 ```
 
-The `.env` file should define `CLOJARS_USERNAME` and `CLOJARS_PASSWORD`. The `:deploy` alias expects the jar produced by `clojure -T:build jar`.
+The `.env` file should define `CLOJARS_USERNAME` and `CLOJARS_DEPLOY_TOKEN`. The publish wrapper maps that token to the env var expected by `deps-deploy`.
 
 ### Usage
 
 Here are basic examples of how to use `ollama/cli` in your Clojure application:
 
 ```clojure
-org.clojars.robson-kfu/ollama-cli {:mvn/version "0.0.2-SNAPSHOT"}
+org.clojars.robson-kfu/ollama-cli {:mvn/version "0.0.3-SNAPSHOT"}
 ```
 
 ```clojure
@@ -69,30 +71,33 @@ org.clojars.robson-kfu/ollama-cli {:mvn/version "0.0.2-SNAPSHOT"}
 (def model "phi3")
 
 (def response
-  (chat/chat! {:model model :messages messages}))
+  (chat/chat {:model model :messages messages}))
 
 (doseq [chunk response]
   (print (str chunk)))
 
 (def generated
-  (generate/generate! {:model model
-                       :prompt "Summarize Rayleigh scattering"
-                       :stream false
-                       :think true}))
+  (generate/generate {:model model
+                      :prompt "Summarize Rayleigh scattering"
+                      :stream false
+                      :think true}))
 
 (:response generated)
 
 (def embeddings
-  (embed/embed! {:model "embeddinggemma"
-                 :input ["Why is the sky blue?"
-                         "Why is the grass green?"]}))
+  (embed/embed {:model "embeddinggemma"
+                :input ["Why is the sky blue?"
+                        "Why is the grass green?"]}))
 
 (:embeddings embeddings)
 ```
 
 ## Documentation
 
-Further documentation detailing all functions and their usage is available under the `doc` directory.
+Additional guides:
+
+- [Getting Started](doc/getting-started.md)
+- [Configuration](doc/configuration.md)
 
 ## Contributing
 

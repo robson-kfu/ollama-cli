@@ -1,4 +1,5 @@
 (ns ollama.cli.chat
+  "High-level client for Ollama's `/api/chat` endpoint."
   (:require [cheshire.core :as json]
             [clj-http.client :as client]
             [clojure.java.io :as io]
@@ -64,9 +65,14 @@
   {:content-type "application/json"})
 
 (defn chat
-  "Generate a chat response with the Ollama API.
-   Returns a sequence of parsed stream events when streaming is enabled, or a
-   single parsed response map when streaming is disabled."
+  "Send a chat request to Ollama.
+
+  `request` accepts the keys defined by `ollama.cli.schemas/chat-request`,
+  including `:model`, `:messages`, optional `:tools`, and optional generation
+  options.
+
+  Returns a lazy sequence of parsed stream events when streaming is enabled, or
+  a single parsed response map when streaming is disabled."
   [request]
   {:pre  [(s/valid? ::os/chat-request request)]
    :post [(s/valid? ::os/chat-response %)]}

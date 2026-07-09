@@ -13,4 +13,4 @@
   :deploy {:replace-deps {slipset/deps-deploy {:mvn/version "0.2.2"}}
            :exec-fn deps-deploy.deps-deploy/deploy
            :exec-args {:installer :remote
-                       :artifact "target/ollama-cli-0.0.2-SNAPSHOT.jar"}}}}
+                       :artifact "target/ollama-cli-0.0.3-SNAPSHOT.jar"}}}}

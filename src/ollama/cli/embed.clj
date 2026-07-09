@@ -1,4 +1,5 @@
 (ns ollama.cli.embed
+  "High-level client for Ollama's `/api/embed` endpoint."
   (:require [cheshire.core :as json]
             [clj-http.client :as client]
             [clojure.spec.alpha :as s]
@@ -26,8 +27,12 @@
      (some? options) (assoc :options options))))
 
 (defn embed
-  "Generate embeddings with the Ollama API.
-   Returns a parsed response map with the model metadata and embedding vectors."
+  "Request embeddings from Ollama.
+
+  `request` accepts the keys defined by `ollama.cli.schemas/embed-request`,
+  including `:model`, `:input`, and optional `:dimensions` or `:options`.
+
+  Returns a parsed response map with model metadata and embedding vectors."
   [request]
   {:pre  [(s/valid? ::os/embed-request request)]
    :post [(s/valid? ::os/embed-response %)]}

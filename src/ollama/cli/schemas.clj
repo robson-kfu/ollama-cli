@@ -1,4 +1,5 @@
 (ns ollama.cli.schemas
+  "Specs describing request and response payloads used by the public API."
   (:require [clojure.spec.alpha :as s]))
 
 (defn- lazy-seq? [s] (instance? clojure.lang.LazySeq s))

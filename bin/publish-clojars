@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! -f .env ]]; then
+  echo ".env file not found"
+  exit 1
+fi
+
+set -a
+source .env
+set +a
+
+: "${CLOJARS_USERNAME:?CLOJARS_USERNAME must be set in .env}"
+: "${CLOJARS_DEPLOY_TOKEN:?CLOJARS_DEPLOY_TOKEN must be set in .env}"
+
+export CLOJARS_PASSWORD="$CLOJARS_DEPLOY_TOKEN"
+
+artifact="target/ollama-cli-0.0.3-SNAPSHOT.jar"
+pom_file="target/pom.xml"
+pom_path_in_jar="META-INF/maven/org.clojars.robson-kfu/ollama-cli/pom.xml"
+
+if [[ ! -f "$artifact" ]]; then
+  echo "artifact not found: $artifact"
+  exit 1
+fi
+
+unzip -p "$artifact" "$pom_path_in_jar" > "$pom_file"
+
+clojure -X:deploy :pom-file "\"$pom_file\""
