@@ -18,3 +18,4 @@ pom.xml.asc
 /cli.iml
 /ollama-cli.iml
 .calva/repl.calva-repl
+.env

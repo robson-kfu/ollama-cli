@@ -38,6 +38,17 @@ Install the snapshot to your local Maven cache with:
 clojure -T:build install
 ```
 
+Publish the snapshot to Clojars with a deploy token:
+
+```bash
+set -a
+source .env
+set +a
+clojure -X:deploy
+```
+
+The `.env` file should define `CLOJARS_USERNAME` and `CLOJARS_PASSWORD`. The `:deploy` alias expects the jar produced by `clojure -T:build jar`.
+
 ### Usage
 
 Here are basic examples of how to use `ollama/cli` in your Clojure application:
