@@ -6,4 +6,7 @@
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {clj-http-fake/clj-http-fake {:mvn/version "1.0.4"}}
-         :main-opts ["-m" "ollama.cli.test-runner"]}}}
+         :main-opts ["-m" "ollama.cli.test-runner"]}
+  :build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.10"
+                                                :git/sha "deedd62"}}
+          :ns-default build}}}

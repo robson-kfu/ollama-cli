@@ -17,3 +17,4 @@ pom.xml.asc
 .lsp/
 /cli.iml
 /ollama-cli.iml
+.calva/repl.calva-repl

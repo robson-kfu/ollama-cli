@@ -26,9 +26,25 @@ Run the full test suite with:
 clojure -M:test
 ```
 
+Build the checked-in snapshot release metadata with:
+
+```bash
+clojure -T:build jar
+```
+
+Install the snapshot to your local Maven cache with:
+
+```bash
+clojure -T:build install
+```
+
 ### Usage
 
 Here are basic examples of how to use `ollama/cli` in your Clojure application:
+
+```clojure
+org.clojars.robson-kfu/ollama-cli {:mvn/version "0.0.2-SNAPSHOT"}
+```
 
 ```clojure
 (ns my-app
